@@ -25,10 +25,30 @@
             console.log("✅ التحقق من سلامة التطبيق: تم بنجاح.");
             return true;
         }
+        
+        // NEW: Function to check login status and show the login screen if needed
+        function checkLoginAndDisplay() {
+            // إذا لم يكن هناك مستخدم مسجل الدخول، قم بإظهار واجهة تسجيل الدخول
+            if (!localStorage.getItem('isLoggedIn')) {
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) mainContent.classList.add('hidden');
+                
+                const loginScreen = document.getElementById('login-screen');
+                if (loginScreen) loginScreen.classList.remove('hidden');
+            } else {
+                // إذا كان المستخدم مسجل الدخول، أخفِ شاشة تسجيل الدخول وأظهر المحتوى
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) mainContent.classList.remove('hidden');
+                
+                const loginScreen = document.getElementById('login-screen');
+                if (loginScreen) loginScreen.classList.add('hidden');
+            }
+        }
+
 
         // تنفيذ التحقق فوراً. إذا فشل، سيتم إيقاف تحميل باقي الصفحة
-        if (!verifyApp()) {
-            // يمكن هنا إضافة كود إضافي لوقف تحميل باقي موارد الصفحة إذا لزم الأمر
+        if (verifyApp()) {
+            window.addEventListener('load', checkLoginAndDisplay);
         }
     </script>
     <style>
@@ -160,44 +180,121 @@
             0% { background-position: 0 0; }
             100% { background-position: 400% 0; }
         }
+        
+        /* NEW: تنسيقات شاشة تسجيل الدخول */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: #ecf0f1;
+        }
+        .login-form-container {
+            background: linear-gradient(135deg, #1f1c2c, #2c3e50);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            width: 350px;
+            max-width: 90%;
+            text-align: center;
+        }
+        .login-form-container h2 {
+            color: #9b59b6;
+            margin-bottom: 25px;
+        }
+        .login-form-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #34495e;
+            color: #ecf0f1;
+            font-size: 1.1em;
+            box-sizing: border-box;
+        }
+        .login-form-container input::placeholder {
+            color: #bdc3c7;
+        }
+        .login-form-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #8e44ad, #3498db);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .login-form-container button:hover {
+            opacity: 0.9;
+        }
+        .login-message {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>ICT (احمد عطيه محمد)</h1>
-        <span class="version">V3.3</span> </header>
+    
+    <div id="login-screen" class="hidden">
+        <div class="login-form-container">
+            <h2>تسجيل الدخول - ICT</h2>
+            <input type="text" id="username" placeholder="اسم المستخدم" autocomplete="username">
+            <input type="password" id="password" placeholder="كلمة المرور" autocomplete="current-password">
+            <button id="login-button">دخول</button>
+            <p id="login-message" class="login-message"></p>
+        </div>
+    </div>
 
-    <main class="grid-container">
+    <div id="main-content">
+        <header>
+            <h1>ICT (احمد عطيه محمد)</h1>
+            <span class="version">V3.3</span> </header>
 
-        <a href="AI/index.html" class="card">
-            <h2>الدرس الأول</h2>
-            <p>انقر هنا لبدء اختبار الذكاء الاصطناعي</p>
-        </a>
+        <main class="grid-container">
 
-        <a href="CCNA IV/index.html" class="card">
-            <h2>الدرس الثاني</h2>
-            <p>انقر هنا لبدء اختبار CCNA IV</p>
-        </a>
+            <a href="AI/index.html" class="card">
+                <h2>الدرس الأول</h2>
+                <p>انقر هنا لبدء اختبار الذكاء الاصطناعي</p>
+            </a>
 
-        <a href="Cybersecurity/index.html" class="card">
-            <h2>الدرس الثالث</h2>
-            <p>انقر هنا لبدء اختبار الأمن السيبراني</p>
-        </a>
+            <a href="CCNA IV/index.html" class="card">
+                <h2>الدرس الثاني</h2>
+                <p>انقر هنا لبدء اختبار CCNA IV</p>
+            </a>
 
-        <a href="Encryption Algorithm/index.html" class="card">
-            <h2>الدرس الرابع</h2>
-            <p>انقر هنا لبدء اختبار خوارزميات التشفير</p>
-        </a>
+            <a href="Cybersecurity/index.html" class="card">
+                <h2>الدرس الثالث</h2>
+                <p>انقر هنا لبدء اختبار الأمن السيبراني</p>
+            </a>
 
-        <a href="IoT/index.html" class="card">
-            <h2>الدرس الخامس</h2>
-            <p>انقر هنا لبدء اختبار إنترنت الأشياء</p>
-        </a>
+            <a href="Encryption Algorithm/index.html" class="card">
+                <h2>الدرس الرابع</h2>
+                <p>انقر هنا لبدء اختبار خوارزميات التشفير</p>
+            </a>
 
-        <a href="Server Administration/index.html" class="card">
-            <h2>الدرس السادس</h2>
-            <p>انقر هنا لبدء اختبار إدارة السيرفرات</p>
-        </a>
-    </main>
+            <a href="IoT/index.html" class="card">
+                <h2>الدرس الخامس</h2>
+                <p>انقر هنا لبدء اختبار إنترنت الأشياء</p>
+            </a>
+
+            <a href="Server Administration/index.html" class="card">
+                <h2>الدرس السادس</h2>
+                <p>انقر هنا لبدء اختبار إدارة السيرفرات</p>
+            </a>
+        </main>
+    </div>
 </body>
 </html>
