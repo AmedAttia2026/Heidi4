@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة تعليمية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="dark-mode">
+
+    <header class="header-bg text-white p-4 shadow-md">
+        <div class="header-actions-right">
+            <div class="hamburger-menu" id="hamburger-menu">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </div>
+            <button id="back-to-home-button" class="action-button home-button">
+                🏠
+            </button>
+        </div>
+        
+        <h1 class="text-xl md:text-2xl font-bold" id="header-title"></h1>
+        
+        <div class="header-actions-left">
+            <button id="font-size-decrease" class="font-size-button">-</button>
+            <button id="font-size-increase" class="font-size-button">+</button>
+        </div>
+    </header>
+
+    <h2 id="current-tutorial-title" class="text-xl md:text-2xl font-bold text-center mt-20 md:mt-24 text-white"></h2>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="text-center font-bold">القائمة</h2>
+        </div>
+        <nav class="flex flex-col flex-grow sidebar-nav-container">
+            </nav>
+    </aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <main class="container mx-auto p-4 md:p-8 main-container">
+        </main>
+
+    <div class="fab-container">
+        <button id="scroll-to-top-button" class="fab-button scroll-to-top-fab">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+        </button>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="../app.js"></script>
+</body>
+</html>

@@ -1,0 +1,629 @@
+/*
+ * Global Styles
+ * Base font size for the entire document, relative to which all 'rem' units will scale
+ */
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FA;
+    color: #3A3A3A;
+    line-height: 1.6;
+    font-size: 1rem;
+    transition: font-size 0.2s ease-in-out;
+}
+
+/*
+ * Header & Navigation Styles
+ * Fixed header for easy access
+ */
+.header-bg {
+    background-color: #007BFF;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    padding: 0.75rem 1rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #0056b3;
+}
+
+/* New CSS to align elements as requested */
+.header-actions-right {
+    display: flex;
+    align-items: center;
+    /* تم إزالة المسافة هنا لضبطها على كل عنصر على حدة */
+    gap: 0;
+}
+
+.header-actions-left {
+    display: flex;
+    align-items: center;
+    /* تم تقريب أزرار الخط تمامًا هنا */
+    gap: 0;
+}
+
+.header-bg h1 {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Hamburger menu icon for the sidebar */
+.hamburger-menu {
+    display: block;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: transform 0.2s ease-in-out;
+    /* تم إضافة مسافة هنا لتبعد زر القائمة عن زر المنزل */
+    margin-right: 0.5rem;
+}
+
+.hamburger-menu:hover {
+    transform: scale(1.1);
+}
+
+.hamburger-menu svg {
+    width: 24px;
+    height: 24px;
+}
+
+.home-button {
+    background-color: transparent !important;
+    border: none !important;
+    color: white !important;
+    font-size: 1.7rem !important;
+    padding: 0 !important;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: transform 0.2s ease-in-out;
+}
+
+.home-button:hover {
+    transform: scale(1.1);
+}
+
+.home-button:hover,
+.home-button:focus {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Sidebar styles */
+.sidebar {
+    position: fixed;
+    left: -200px;
+    width: 200px;
+    height: 100%;
+    background-color: #f8f9fa;
+    color: #3A3A3A;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0;
+    top: 0;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 25;
+    display: none;
+}
+.sidebar-backdrop.active {
+    display: block;
+}
+
+.sidebar-header {
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    font-size: 1.1rem;
+    color: #4A5568;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+}
+.sidebar-nav-item:hover, .sidebar-nav-item.active {
+    background-color: #E2E8F0;
+    color: #007BFF;
+}
+
+/*
+ * Quiz Card & Button Styles
+ */
+.card {
+    background-color: #FFFFFF;
+    border-radius: 0.75rem;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+    margin-bottom: 1.75rem;
+    padding: 1.5rem;
+    border: 1px solid #E0E0E0;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #424242;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+}
+.action-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+    transition: background-color 0.25s ease, transform 0.15s ease;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.25);
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+.answer-text {
+    color: #28A745;
+    font-weight: 700;
+    margin-top: 1rem;
+    display: none;
+    font-size: 1.1rem;
+}
+.mcq-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.9rem;
+    cursor: pointer;
+    position: relative;
+    padding: 0.75rem 1rem;
+    border-radius: 0.4rem;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid #E0E0E0;
+    
+    position: relative;
+    z-index: 1;
+}
+.mcq-option::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    left: -3px;
+    right: -3px;
+    z-index: 0;
+    cursor: pointer;
+}
+.mcq-option:hover {
+    background-color: #F5F5F5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.mcq-option:active {
+    transform: scale(0.99);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.mcq-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+.mcq-option label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    padding-left: 2rem;
+    flex-grow: 1;
+    position: relative;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+}
+.mcq-option label::before {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1.5rem;
+    width: 1.5rem;
+    border: 2px solid #007BFF;
+    border-radius: 50%;
+    background: #fff;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 1;
+}
+.mcq-option label::after {
+    content: '';
+    position: absolute;
+    left: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 0.8rem;
+    width: 0.8rem;
+    border-radius: 50%;
+    background: #007BFF;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+}
+.mcq-option input[type="radio"]:checked + label::after {
+    opacity: 1;
+}
+.mcq-option input[type="radio"]:checked + label::before {
+    border-color: #007BFF;
+    background-color: #E6F2FF;
+}
+.mcq-option:hover label::before {
+    border-color: #0056b3;
+}
+.score-display {
+    margin-top: 1.5rem;
+    font-weight: 700;
+    color: #3A3A3A;
+    font-size: 1.6rem;
+    text-align: center;
+}
+.final-score-message {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #007BFF;
+    margin-top: 1.75rem;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+.correct-answer-highlight {
+    color: #28A745;
+}
+.incorrect-answer-highlight {
+    color: #DC3545;
+}
+.question-feedback {
+    font-size: 1rem;
+    margin-top: 0.75rem;
+    font-weight: 600;
+}
+.option-correct-highlight {
+    background-color: #D1FAE5;
+    border-color: #059669;
+}
+.option-incorrect-highlight {
+    background-color: #FEE2E2;
+    border-color: #DC2626;
+}
+.mcq-option.selected-for-review label::after,
+.mcq-option.correct-for-review label::after {
+    opacity: 1;
+}
+.mcq-option.selected-for-review label::before,
+.mcq-option.correct-for-review label::before {
+    border-color: #007BFF;
+    background-color: #E6F2FF;
+}
+.mcq-option.selected-for-review.option-incorrect-highlight label::before {
+    border-color: #DC3545;
+    background-color: #FEE2E2;
+}
+.mcq-option.selected-for-review.option-incorrect-highlight label::after {
+    background: #DC3545;
+}
+
+/*
+ * Floating Action Button (FAB)
+ */
+.fab-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    z-index: 1000;
+}
+.fab-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 0.6rem;
+    border-radius: 9999px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+}
+.fab-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1.5px);
+}
+.fab-button svg {
+    width: 20px;
+    height: 20px;
+}
+.scroll-to-top-fab {
+    background-color: #28A745;
+}
+.scroll-to-top-fab:hover {
+    background-color: #218838;
+}
+
+/*
+ * Dark Mode Styles
+ */
+.dark-mode {
+    background-color: #1A202C;
+    color: #E2E8F0;
+}
+.dark-mode .header-bg {
+    background-color: #2D3748;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+.dark-mode .sidebar {
+    background-color: #2D3748;
+    color: #E2E8F0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.4);
+}
+.dark-mode .sidebar-nav-item {
+    color: #CBD5E0;
+    border-bottom: 1px solid #4A5568;
+}
+.dark-mode .sidebar-nav-item:hover, .dark-mode .sidebar-nav-item.active {
+    background-color: #4A5568;
+    color: #007BFF;
+}
+.dark-mode .card {
+    background-color: #2D3748;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    border-color: #4A5568;
+}
+.dark-mode .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+.dark-mode .question-text {
+    color: #E2E8F0;
+}
+.dark-mode .action-button {
+    background-color: #4299E1;
+    box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+}
+.dark-mode .action-button:hover {
+    background-color: #3182CE;
+    box-shadow: 0 6px 12px rgba(66, 153, 225, 0.4);
+}
+.dark-mode .answer-text {
+    color: #68D391;
+}
+.dark-mode .mcq-option {
+    background-color: #4A5568;
+    border-color: #6A758D;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.dark-mode .mcq-option:hover {
+    background-color: #2D3748;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+.dark-mode .mcq-option label {
+    color: #E2E8F0;
+}
+.dark-mode .mcq-option label::before {
+    border-color: #4299E1;
+    background: #2D3748;
+}
+.dark-mode .mcq-option label::after {
+    background: #4299E1;
+}
+.dark-mode .mcq-option input[type="radio"]:checked + label::before {
+    border-color: #4299E1;
+    background-color: #2A4365;
+}
+.dark-mode .mcq-option:hover label::before {
+    border-color: #3182CE;
+}
+.dark-mode .mcq-option.selected-for-review label::before,
+.dark-mode .mcq-option.correct-for-review label::before {
+    border-color: #4299E1;
+    background-color: #2A4365;
+}
+.dark-mode .mcq-option.selected-for-review label::after,
+.dark-mode .mcq-option.correct-for-review label::after {
+    background: #4299E1;
+}
+.dark-mode .mcq-option.selected-for-review.option-incorrect-highlight label::before {
+    border-color: #E53E3E;
+    background-color: #C53030;
+}
+.dark-mode .mcq-option.selected-for-review.option-incorrect-highlight label::after {
+    background: #E53E3E;
+}
+.dark-mode .score-display {
+    color: #E2E8F0;
+}
+.dark-mode .final-score-message {
+    color: #4299E1;
+}
+.dark-mode .correct-answer-highlight {
+    color: #68D391;
+}
+.dark-mode .incorrect-answer-highlight {
+    color: #FC8181;
+}
+.dark-mode .option-correct-highlight {
+    background-color: #2F855A;
+    border-color: #38A169;
+}
+.dark-mode .option-incorrect-highlight {
+    background-color: #C53030;
+    border-color: #E53E3E;
+}
+.dark-mode footer {
+    border-color: #4A5568;
+}
+.dark-mode footer p {
+    color: #A0AEC0;
+}
+
+/*
+ * Font Size & Toggle Switch Styles
+ */
+.font-size-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    /* تم إزالة الهامش والمسافة الداخلية لتقريب الأزرار تمامًا */
+    margin: 0;
+    padding: 0;
+}
+
+/* تعديل إضافي لتقليل المسافة بين الزرين لضمان عدم وجود فجوة */
+#font-size-increase {
+    margin-left: -5px; /* هامش سالب لتقريب الزر الثاني من الأول */
+}
+
+.font-size-button:hover {
+    transform: scale(1.1);
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 26px;
+    margin: 0;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .toggle-slider {
+    background-color: #2196F3;
+}
+input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+.dark-mode .toggle-slider {
+    background-color: #4A5568;
+}
+.dark-mode input:checked + .toggle-slider {
+    background-color: #4299E1;
+}
+.dark-mode .toggle-slider:before {
+    background-color: #E2E8F0;
+}
+
+/*
+ * Media Queries
+ * General responsive adjustments
+ */
+@media (max-width: 768px) {
+    .header-bg h1 {
+        font-size: 1.1rem;
+    }
+    /* Reduce card padding on smaller screens for better fit */
+    .card {
+        padding: 1rem;
+    }
+    /* Adjust MCQ option padding for readability on mobile */
+    .mcq-option {
+        padding: 0.65rem 0.8rem;
+    }
+}
+
+.actions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.hidden {
+    display: none !important;
+}
+
+/* Added a hover effect for the hamburger menu */
+.hamburger-menu:hover {
+    transform: scale(1.1);
+}
+
+/* Added a hover effect for the home button */
+.home-button:hover,
+.home-button:focus {
+    transform: scale(1.1);
+}
+
