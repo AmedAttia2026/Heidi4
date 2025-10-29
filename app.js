@@ -31,6 +31,86 @@ async function loadQuizData() {
     }
 }
 
+// --- AUTHENTICATION STATE & LOGIC (NEW) ---
+// Hardcoded credentials for simulation
+const USERS = {
+    'user1': 'pass123',
+    'admin': 'secureadmin'
+};
+
+// Simulated Server/Database for Device Locking
+// Key: userId, Value: deviceId (stored in localStorage for persistence simulation)
+const userSessions = new Map(); 
+
+// Helper function to generate a secure (enough for simulation) UUID
+function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+// Main login logic function
+function handleLogin() {
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const messageElement = document.getElementById('login-message');
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+
+    messageElement.textContent = ''; // Clear previous messages
+
+    if (USERS[username] !== password) {
+        messageElement.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة.';
+        return;
+    }
+
+    // 1. Get/Generate Device ID
+    let deviceId = localStorage.getItem('deviceId');
+    if (!deviceId) {
+        deviceId = generateUUID();
+        localStorage.setItem('deviceId', deviceId);
+        console.log(`NEW DEVICE ID GENERATED: ${deviceId}`);
+    }
+
+    // 2. Check Device Lock (Simulated Server Check)
+    // Load simulated sessions from local storage to persist the lock
+    const storedSessions = JSON.parse(localStorage.getItem('userSessions')) || {};
+    for (const [key, value] of Object.entries(storedSessions)) {
+        userSessions.set(key, value);
+    }
+    
+    // Check if another device is already locked to this user
+    if (userSessions.has(username) && userSessions.get(username) !== deviceId) {
+        messageElement.textContent = '❌ هذا الحساب مسجل الدخول بالفعل من جهاز آخر ولا يمكن تسجيل الدخول منه.';
+        console.warn(`Login failed for user ${username}: Device ID mismatch. Locked to: ${userSessions.get(username)}`);
+        return;
+    }
+
+    // 3. Lock the session and Grant Access
+    userSessions.set(username, deviceId);
+    localStorage.setItem('userSessions', JSON.stringify(Object.fromEntries(userSessions))); // Save the lock
+    
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('currentUserId', username);
+    
+    messageElement.textContent = '✅ تم تسجيل الدخول بنجاح!';
+    console.log(`User ${username} logged in successfully from device ${deviceId}`);
+
+    // Hide login screen and show main content
+    setTimeout(() => {
+        const loginScreen = document.getElementById('login-screen');
+        if (loginScreen) loginScreen.remove();
+
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) mainContent.classList.remove('hidden');
+
+        // Initialize the app UI for the logged-in state
+        initializeApplication();
+    }, 1000);
+}
+
+
 // --- GLOBAL STATE & DOM ELEMENTS ---
 const currentQuiz = {
     tutorial: 'tutorial-1',
@@ -499,28 +579,27 @@ function showSection(sectionId) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- INITIALIZATION ---
+// Function to consolidate initial app setup
+function initializeApplication() {
+    // We only proceed with the quiz initialization if the user is logged in
+    if (localStorage.getItem('isLoggedIn')) {
+        loadQuizData();
+        loadQuizState();
+        buildDynamicUI(); // Build UI first based on data.js
 
-window.addEventListener('load', () => {
-    // We no longer need to calculate header height for scrolling
-    // if (header) {
-    //      headerHeight = header.offsetHeight;
-    // }
+        // Render the last viewed tutorial or the first one by default.
+        const firstTutorialKey = Object.keys(quizData).filter(key => key !== 'courseTitle')[0];
+        const initialTutorial = quizData[currentQuiz.tutorial] ? currentQuiz.tutorial : firstTutorialKey;
 
-    loadQuizState();
-    buildDynamicUI(); // Build UI first based on data.js
-
-    // Render the last viewed tutorial or the first one by default.
-    const firstTutorialKey = Object.keys(quizData).filter(key => key !== 'courseTitle')[0];
-    const initialTutorial = quizData[currentQuiz.tutorial] ? currentQuiz.tutorial : firstTutorialKey;
-
-    // Show the initial tutorial section without any scrolling.
-    setActiveNavItem(initialTutorial);
-    currentQuiz.tutorial = initialTutorial;
-    const tutorialTitle = quizData[initialTutorial]?.title || initialTutorial.replace(/-/g, ' ').toUpperCase();
-    currentTutorialTitle.textContent = tutorialTitle;
-    renderQuiz(initialTutorial, false);
-
+        // Show the initial tutorial section without any scrolling.
+        setActiveNavItem(initialTutorial);
+        currentQuiz.tutorial = initialTutorial;
+        const tutorialTitle = quizData[initialTutorial]?.title || initialTutorial.replace(/-/g, ' ').toUpperCase();
+        currentTutorialTitle.textContent = tutorialTitle;
+        renderQuiz(initialTutorial, false);
+    }
+    
+    // Add event listeners that are always needed (like sidebar toggle)
     hamburgerMenu.addEventListener('click', () => {
         sidebar.classList.toggle('active');
         sidebarBackdrop.classList.toggle('active');
@@ -530,7 +609,7 @@ window.addEventListener('load', () => {
         sidebar.classList.remove('active');
         sidebarBackdrop.classList.remove('active');
     });
-
+    
     // **التعديل: تفعيل كود زر الارتفاع للأعلى**
     const scrollToTopButton = document.getElementById('scroll-to-top-button');
     window.addEventListener('scroll', () => {
@@ -543,19 +622,6 @@ window.addEventListener('load', () => {
     scrollToTopButton.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-
-    // Removed the dark mode toggle functionality
-    // const darkModeToggle = document.getElementById('dark-mode-toggle');
-    // darkModeToggle.addEventListener('change', () => {
-    //      document.body.classList.toggle('dark-mode', darkModeToggle.checked);
-    //      localStorage.setItem('darkMode', darkModeToggle.checked);
-    // });
-    
-    // const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    // darkModeToggle.checked = isDarkMode;
-    // if (isDarkMode) {
-    //      document.body.classList.add('dark-mode');
-    // }
 
     const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
     const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
@@ -570,4 +636,29 @@ window.addEventListener('load', () => {
             htmlElement.style.fontSize = (currentSize - 1) + 'px';
         }
     });
+}
+
+
+// --- INITIALIZATION ---
+
+window.addEventListener('load', () => {
+    // Attach login listener if the login screen exists
+    const loginButton = document.getElementById('login-button');
+    if (loginButton) {
+        loginButton.addEventListener('click', handleLogin);
+        // Also allow pressing Enter to log in
+        const passwordInput = document.getElementById('password');
+        if (passwordInput) {
+            passwordInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleLogin();
+                }
+            });
+        }
+    }
+
+    // Check if already logged in (from index.html logic) and initialize the app fully
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        initializeApplication();
+    }
 });
