@@ -39,7 +39,6 @@ const USERS = {
 };
 
 // Simulated Server/Database for Device Locking
-// Key: userId, Value: deviceId (stored in localStorage for persistence simulation)
 const userSessions = new Map(); 
 
 // Helper function to generate a secure (enough for simulation) UUID
@@ -74,7 +73,6 @@ function handleLogin() {
     }
 
     // 2. Check Device Lock (Simulated Server Check)
-    // Load simulated sessions from local storage to persist the lock
     const storedSessions = JSON.parse(localStorage.getItem('userSessions')) || {};
     for (const [key, value] of Object.entries(storedSessions)) {
         userSessions.set(key, value);
@@ -94,7 +92,7 @@ function handleLogin() {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('currentUserId', username);
     
-    messageElement.textContent = '✅ تم تسجيل الدخول بنجاح!';
+    messageElement.textContent = '✅ تم تسجيل الدخول بنجاح! سيتم التحويل...';
     console.log(`User ${username} logged in successfully from device ${deviceId}`);
 
     // Hide login screen and show main content
@@ -116,9 +114,9 @@ const currentQuiz = {
     tutorial: 'tutorial-1',
     incorrectAnswers: []
 };
-const incorrectAnswers = new Map(); // Using a Map to easily manage unique incorrect answers.
+const incorrectAnswers = new Map(); 
 
-// تم إزالة تعريف عناصر DOM هنا وسيتم نقلها داخل initializeApplication
+// تعريف متغيرات عناصر DOM (سيتم تعيين قيمتها لاحقاً في initializeApplication)
 let sidebar, hamburgerMenu, sidebarBackdrop, navItemsContainer, sectionsContainer, headerTitle, currentTutorialTitle;
 
 
@@ -149,14 +147,12 @@ function loadQuizState() {
     }
 }
 
-// --- QUIZ RENDERING & LOGIC ---
+// --- QUIZ RENDERING & LOGIC (بقية الدوال كما هي) ---
 
-// Gets the correct container ID for a given tutorial key.
 function getContainerId(tutorialKey) {
     return `${tutorialKey}-container`;
 }
 
-// Dynamically creates an HTML card for a single question.
 function createQuestionCard(questionObj, questionIndex, tutorialKey, isReviewMode = false) {
     const card = document.createElement('div');
     card.className = 'card';
@@ -194,18 +190,15 @@ function createQuestionCard(questionObj, questionIndex, tutorialKey, isReviewMod
             option.appendChild(label);
             optionsContainer.appendChild(option);
 
-            // If in review mode, highlight the user's previous incorrect answer and the correct answer.
             if (isReviewMode) {
                 const incorrectQuestion = Array.from(incorrectAnswers.values()).find(item =>
                     item.tutorialKey === tutorialKey && item.questionIndex === questionIndex
                 );
 
-                // If user skipped (answer is null), or chose wrong, highlight their choice
                 if (incorrectQuestion) {
                     if (incorrectQuestion.userAnswer !== null && parseInt(incorrectQuestion.userAnswer) === optionIndex) {
                         option.classList.add('selected-for-review', 'option-incorrect-highlight');
                     }
-                    // Always highlight the correct answer in review mode
                     if (questionObj.correct === optionIndex) {
                         option.classList.add('option-correct-highlight');
                     }
@@ -215,7 +208,6 @@ function createQuestionCard(questionObj, questionIndex, tutorialKey, isReviewMod
         card.appendChild(optionsContainer);
     }
 
-    // In review mode, we don't need a check button per card.
     if (!isReviewMode) {
         const checkButton = document.createElement('button');
         checkButton.className = 'action-button check-button';
@@ -230,7 +222,6 @@ function createQuestionCard(questionObj, questionIndex, tutorialKey, isReviewMod
     return card;
 }
 
-// Clears the quiz container before rendering new questions.
 function clearQuizContainer(containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
@@ -252,7 +243,6 @@ function clearQuizContainer(containerId) {
     if (retakeButton) retakeButton.classList.add('hidden');
 }
 
-// Main function to render a quiz based on the selected tutorial.
 function renderQuiz(tutorialKey, isReviewMode = false) {
     const containerId = getContainerId(tutorialKey);
     showSection(`${tutorialKey}-section`);
@@ -273,7 +263,6 @@ function renderQuiz(tutorialKey, isReviewMode = false) {
             const card = createQuestionCard(qObj, qIndex, tKey, isReviewMode);
             container.appendChild(card);
 
-            // If in review mode, show the correct answer and feedback.
             if (isReviewMode) {
                 showAnswer(card, qObj, true);
             }
@@ -287,7 +276,6 @@ function renderQuiz(tutorialKey, isReviewMode = false) {
     if (showAllButton) {
         showAllButton.classList.toggle('hidden', isReviewMode);
     }
-    // Toggle visibility of review and retake buttons based on mode
     if (reviewButton) {
         reviewButton.classList.toggle('hidden', isReviewMode);
     }
@@ -322,7 +310,6 @@ function renderQuiz(tutorialKey, isReviewMode = false) {
     });
 }
 
-// Checks a single answer and provides immediate feedback.
 function showAnswer(card, questionObj, isReviewMode = false) {
     const selectedOption = card.querySelector('input[type="radio"]:checked');
     const feedbackElement = card.querySelector('.answer-text');
@@ -373,7 +360,6 @@ function showAnswer(card, questionObj, isReviewMode = false) {
     }
 }
 
-// Checks all answers and calculates the score.
 function checkAnswers(tutorialKey) {
     const container = document.getElementById(getContainerId(tutorialKey));
     const questions = quizData[tutorialKey].data;
@@ -417,7 +403,6 @@ function checkAnswers(tutorialKey) {
         finalScoreMessage.classList.remove('hidden');
         reviewButton.classList.remove('hidden');
     }
-    // Ensure the retake button is always hidden after submitting the quiz
     if (retakeButton) {
         retakeButton.classList.add('hidden');
     }
@@ -425,7 +410,6 @@ function checkAnswers(tutorialKey) {
     saveQuizState();
 }
 
-// Displays correct answers for all questions on the page.
 function showAllAnswers(tutorialKey) {
     checkAnswers(tutorialKey);
     const container = document.getElementById(getContainerId(tutorialKey));
@@ -443,28 +427,23 @@ function showAllAnswers(tutorialKey) {
     }
 }
 
+// --- UI & NAVIGATION (بقية الدوال كما هي) ---
 
-// --- UI & NAVIGATION ---
-
-// Dynamically creates navigation items and sections based on quizData.
 function buildDynamicUI() {
     navItemsContainer.innerHTML = '';
     sectionsContainer.innerHTML = '';
 
-    // Set the course title in the header
     headerTitle.textContent = quizData.courseTitle || 'منصة تعليمية';
 
     const tutorialKeys = Object.keys(quizData).filter(key => key !== 'courseTitle');
 
     tutorialKeys.forEach(key => {
-        // Create navigation item
         const navItem = document.createElement('div');
         navItem.className = 'sidebar-nav-item';
         navItem.dataset.section = key;
-        navItem.textContent = quizData[key].title || key.replace(/-/g, ' ').toUpperCase(); // Use title from data or default
+        navItem.textContent = quizData[key].title || key.replace(/-/g, ' ').toUpperCase(); 
         navItemsContainer.appendChild(navItem);
 
-        // Create section
         const section = document.createElement('section');
         section.id = `${key}-section`;
         section.className = 'question-section hidden';
@@ -486,21 +465,16 @@ function buildDynamicUI() {
         sectionsContainer.appendChild(section);
     });
 
-    // Re-attach event listeners to new elements
     attachEventListeners();
 }
 
-// Attach all necessary event listeners.
 function attachEventListeners() {
-    // Sidebar navigation
     document.querySelectorAll('.sidebar-nav-item').forEach(item => {
         item.addEventListener('click', () => {
             const sectionKey = item.dataset.section;
-            // Now we simply show the section without any scrolling logic
             setActiveNavItem(sectionKey);
             currentQuiz.tutorial = sectionKey;
             
-            // Update the tutorial title display
             const tutorialTitle = quizData[sectionKey]?.title || sectionKey.replace(/-/g, ' ').toUpperCase();
             currentTutorialTitle.textContent = tutorialTitle;
             
@@ -511,7 +485,6 @@ function attachEventListeners() {
         });
     });
 
-    // 'Show All' buttons
     document.querySelectorAll('[id^="show-all-"]').forEach(button => {
         button.addEventListener('click', () => {
             const tutorialKey = button.id.replace('show-all-', '');
@@ -519,7 +492,6 @@ function attachEventListeners() {
         });
     });
 
-    // 'Review Incorrect' buttons
     document.querySelectorAll('[id^="review-incorrect-button-"]').forEach(button => {
         button.addEventListener('click', () => {
             const tutorialKey = button.id.replace('review-incorrect-button-', '');
@@ -530,20 +502,16 @@ function attachEventListeners() {
         });
     });
 
-    // 'Retake Quiz' button
     document.querySelectorAll('[id^="retake-button-"]').forEach(button => {
         button.addEventListener('click', () => {
             const tutorialKey = button.id.replace('retake-button-', '');
-            // Clear all incorrect answers for this tutorial from local storage and the map
             const keysToRemove = Array.from(incorrectAnswers.keys()).filter(key => key.startsWith(tutorialKey));
             keysToRemove.forEach(key => incorrectAnswers.delete(key));
             saveQuizState();
-            // Re-render the quiz from the beginning (not in review mode)
             renderQuiz(tutorialKey, false);
         });
     });
     
-    // Add event listener for the new "Back to Home" button
     const backToHomeButton = document.getElementById('back-to-home-button');
     if (backToHomeButton) {
         backToHomeButton.addEventListener('click', () => {
@@ -552,27 +520,25 @@ function attachEventListeners() {
     }
 }
 
-// Highlights the active navigation item in the sidebar.
 function setActiveNavItem(sectionKey) {
     document.querySelectorAll('.sidebar-nav-item').forEach(item => {
         item.classList.toggle('active', item.dataset.section === sectionKey);
     });
 }
 
-// Shows the relevant section and hides others.
 function showSection(sectionId) {
     document.querySelectorAll('.question-section').forEach(section => section.classList.add('hidden'));
     const sectionToShow = document.getElementById(sectionId);
     if (sectionToShow) {
         sectionToShow.classList.remove('hidden');
     }
-    // Add the smooth scrolling behavior to fix the page position
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Function to consolidate initial app setup
 function initializeApplication() {
-    // **NEW: Define main DOM elements inside here to ensure they exist after login**
+    // NEW: Define main DOM elements inside here to ensure they exist after login
+    // يجب أن تكون هذه العناصر موجودة في الـ HTML الذي تم تحميله بعد إزالة شاشة الدخول
     sidebar = document.getElementById('sidebar');
     hamburgerMenu = document.getElementById('hamburger-menu');
     sidebarBackdrop = document.getElementById('sidebar-backdrop');
@@ -581,17 +547,14 @@ function initializeApplication() {
     headerTitle = document.getElementById('header-title');
     currentTutorialTitle = document.getElementById('current-tutorial-title');
 
-    // We only proceed with the quiz initialization if the user is logged in
     if (localStorage.getItem('isLoggedIn')) {
         loadQuizData();
         loadQuizState();
-        buildDynamicUI(); // Build UI first based on data.js
+        buildDynamicUI(); 
 
-        // Render the last viewed tutorial or the first one by default.
         const firstTutorialKey = Object.keys(quizData).filter(key => key !== 'courseTitle')[0];
         const initialTutorial = quizData[currentQuiz.tutorial] ? currentQuiz.tutorial : firstTutorialKey;
 
-        // Show the initial tutorial section without any scrolling.
         setActiveNavItem(initialTutorial);
         currentQuiz.tutorial = initialTutorial;
         const tutorialTitle = quizData[initialTutorial]?.title || initialTutorial.replace(/-/g, ' ').toUpperCase();
@@ -599,7 +562,7 @@ function initializeApplication() {
         renderQuiz(initialTutorial, false);
     }
     
-    // Add event listeners that are always needed (like sidebar toggle)
+    // Attach event listeners to newly available elements
     if (hamburgerMenu) {
         hamburgerMenu.addEventListener('click', () => {
             sidebar.classList.toggle('active');
@@ -614,18 +577,17 @@ function initializeApplication() {
         });
     }
     
-    // **التعديل: تفعيل كود زر الارتفاع للأعلى**
     const scrollToTopButton = document.getElementById('scroll-to-top-button');
     window.addEventListener('scroll', () => {
-        if (scrollToTopButton) { // تحقق من وجود الزر
-            if (window.scrollY > 300) { // يظهر الزر بعد 300 بكسل من التمرير
+        if (scrollToTopButton) {
+            if (window.scrollY > 300) { 
                 scrollToTopButton.style.display = 'flex';
             } else {
                 scrollToTopButton.style.display = 'none';
             }
         }
     });
-    if (scrollToTopButton) { // تحقق من وجود الزر
+    if (scrollToTopButton) {
         scrollToTopButton.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -634,13 +596,13 @@ function initializeApplication() {
     const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
     const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
     const htmlElement = document.documentElement;
-    if (fontSizeIncreaseBtn) { // تحقق من وجود الزر
+    if (fontSizeIncreaseBtn) { 
         fontSizeIncreaseBtn.addEventListener('click', () => {
             let currentSize = parseFloat(getComputedStyle(htmlElement).fontSize);
             htmlElement.style.fontSize = (currentSize + 1) + 'px';
         });
     }
-    if (fontSizeDecreaseBtn) { // تحقق من وجود الزر
+    if (fontSizeDecreaseBtn) { 
         fontSizeDecreaseBtn.addEventListener('click', () => {
             let currentSize = parseFloat(getComputedStyle(htmlElement).fontSize);
             if (currentSize > 8) {
@@ -669,8 +631,9 @@ window.addEventListener('load', () => {
         }
     }
 
-    // Check if already logged in (from index.html logic) and initialize the app fully
+    // Check if already logged in and initialize the app fully
     if (localStorage.getItem('isLoggedIn') === 'true') {
+        // إذا كان مسجل الدخول بالفعل، يجب تهيئة التطبيق
         initializeApplication();
     }
 });
