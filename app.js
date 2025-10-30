@@ -118,17 +118,8 @@ const currentQuiz = {
 };
 const incorrectAnswers = new Map(); // Using a Map to easily manage unique incorrect answers.
 
-const sidebar = document.getElementById('sidebar');
-const hamburgerMenu = document.getElementById('hamburger-menu');
-const sidebarBackdrop = document.getElementById('sidebar-backdrop');
-const navItemsContainer = document.querySelector('.sidebar-nav-container'); // Container for nav items
-const sectionsContainer = document.querySelector('.main-container'); // Main container for sections
-const headerTitle = document.getElementById('header-title'); // Reference to the header title
-const currentTutorialTitle = document.getElementById('current-tutorial-title'); // NEW: Reference for the current tutorial title
-
-// Get the fixed header and its height
-const header = document.querySelector('header');
-let headerHeight = 0; // Initialize height to 0
+// تم إزالة تعريف عناصر DOM هنا وسيتم نقلها داخل initializeApplication
+let sidebar, hamburgerMenu, sidebarBackdrop, navItemsContainer, sectionsContainer, headerTitle, currentTutorialTitle;
 
 
 // --- LOCAL STORAGE FUNCTIONS ---
@@ -581,6 +572,15 @@ function showSection(sectionId) {
 
 // Function to consolidate initial app setup
 function initializeApplication() {
+    // **NEW: Define main DOM elements inside here to ensure they exist after login**
+    sidebar = document.getElementById('sidebar');
+    hamburgerMenu = document.getElementById('hamburger-menu');
+    sidebarBackdrop = document.getElementById('sidebar-backdrop');
+    navItemsContainer = document.querySelector('.sidebar-nav-container');
+    sectionsContainer = document.querySelector('.main-container');
+    headerTitle = document.getElementById('header-title');
+    currentTutorialTitle = document.getElementById('current-tutorial-title');
+
     // We only proceed with the quiz initialization if the user is logged in
     if (localStorage.getItem('isLoggedIn')) {
         loadQuizData();
@@ -600,42 +600,54 @@ function initializeApplication() {
     }
     
     // Add event listeners that are always needed (like sidebar toggle)
-    hamburgerMenu.addEventListener('click', () => {
-        sidebar.classList.toggle('active');
-        sidebarBackdrop.classList.toggle('active');
-    });
+    if (hamburgerMenu) {
+        hamburgerMenu.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            sidebarBackdrop.classList.toggle('active');
+        });
+    }
 
-    sidebarBackdrop.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        sidebarBackdrop.classList.remove('active');
-    });
+    if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            sidebarBackdrop.classList.remove('active');
+        });
+    }
     
     // **التعديل: تفعيل كود زر الارتفاع للأعلى**
     const scrollToTopButton = document.getElementById('scroll-to-top-button');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) { // يظهر الزر بعد 300 بكسل من التمرير
-            scrollToTopButton.style.display = 'flex';
-        } else {
-            scrollToTopButton.style.display = 'none';
+        if (scrollToTopButton) { // تحقق من وجود الزر
+            if (window.scrollY > 300) { // يظهر الزر بعد 300 بكسل من التمرير
+                scrollToTopButton.style.display = 'flex';
+            } else {
+                scrollToTopButton.style.display = 'none';
+            }
         }
     });
-    scrollToTopButton.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    if (scrollToTopButton) { // تحقق من وجود الزر
+        scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 
     const fontSizeIncreaseBtn = document.getElementById('font-size-increase');
     const fontSizeDecreaseBtn = document.getElementById('font-size-decrease');
     const htmlElement = document.documentElement;
-    fontSizeIncreaseBtn.addEventListener('click', () => {
-        let currentSize = parseFloat(getComputedStyle(htmlElement).fontSize);
-        htmlElement.style.fontSize = (currentSize + 1) + 'px';
-    });
-    fontSizeDecreaseBtn.addEventListener('click', () => {
-        let currentSize = parseFloat(getComputedStyle(htmlElement).fontSize);
-        if (currentSize > 8) {
-            htmlElement.style.fontSize = (currentSize - 1) + 'px';
-        }
-    });
+    if (fontSizeIncreaseBtn) { // تحقق من وجود الزر
+        fontSizeIncreaseBtn.addEventListener('click', () => {
+            let currentSize = parseFloat(getComputedStyle(htmlElement).fontSize);
+            htmlElement.style.fontSize = (currentSize + 1) + 'px';
+        });
+    }
+    if (fontSizeDecreaseBtn) { // تحقق من وجود الزر
+        fontSizeDecreaseBtn.addEventListener('click', () => {
+            let currentSize = parseFloat(getComputedStyle(htmlElement).fontSize);
+            if (currentSize > 8) {
+                htmlElement.style.fontSize = (currentSize - 1) + 'px';
+            }
+        });
+    }
 }
 
 
