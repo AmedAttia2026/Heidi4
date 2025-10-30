@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICT (احمد عطيه محمد)</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
-
+    
     <script>
         // المفتاح السري الذي يجب أن يتطابق
         const APP_KEY = "AhmedAttia2026SecureKey_NetworkIT"; 
@@ -16,19 +16,16 @@
             if (APP_KEY !== EXPECTED_KEY) {
                 // في حالة فشل التحقق (نسخة معدلة أو تم التلاعب بها)
                 alert("⚠️ فشل في التحقق من المصدر! هذا التطبيق غير أصلي. سيتم الإغلاق.");
-                // مسح محتوى الجسم وعرض رسالة خطأ بدلاً من ذلك
                 document.body.innerHTML = 
                     '<div style="text-align: center; margin-top: 50px; font-size: 1.5em; color: #e74c3c; font-family: \'Cairo\', sans-serif;">تطبيق غير أصلي أو تم التلاعب به.</div>';
                 return false;
             }
-            // يمكن هنا إضافة رسالة نجاح بسيطة إلى الـ Console 
             console.log("✅ التحقق من سلامة التطبيق: تم بنجاح.");
             return true;
         }
         
         // NEW: Function to check login status and show the login screen if needed
         function checkLoginAndDisplay() {
-            // إذا لم يكن هناك مستخدم مسجل الدخول، قم بإظهار واجهة تسجيل الدخول
             if (!localStorage.getItem('isLoggedIn')) {
                 const mainContent = document.getElementById('main-content');
                 if (mainContent) mainContent.classList.add('hidden');
@@ -36,7 +33,6 @@
                 const loginScreen = document.getElementById('login-screen');
                 if (loginScreen) loginScreen.classList.remove('hidden');
             } else {
-                // إذا كان المستخدم مسجل الدخول، أخفِ شاشة تسجيل الدخول وأظهر المحتوى
                 const mainContent = document.getElementById('main-content');
                 if (mainContent) mainContent.classList.remove('hidden');
                 
@@ -45,14 +41,12 @@
             }
         }
 
-
-        // تنفيذ التحقق فوراً. إذا فشل، سيتم إيقاف تحميل باقي الصفحة
         if (verifyApp()) {
             window.addEventListener('load', checkLoginAndDisplay);
         }
     </script>
+
     <style>
-        /* الوضع الليلي والألوان الأساسية */
         body {
             font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -64,7 +58,6 @@
             color: #ecf0f1;
         }
 
-        /* الرأس */
         header {
             text-align: center;
             margin-bottom: 40px;
@@ -75,7 +68,7 @@
             font-size: 2.6em;
             position: relative;
             letter-spacing: 1px;
-            margin-bottom: 5px; /* تقليل المسافة أسفل H1 */
+            margin-bottom: 5px;
         }
 
         h1::after {
@@ -90,20 +83,18 @@
             border-radius: 2px;
         }
 
-        /* تنسيق V1.0 */
         .version {
             font-size: 1.2em;
             font-weight: 700;
-            margin-top: 15px; /* زيادة المسافة أعلى V1.0 لتبدو أسفل العنوان */
+            margin-top: 15px;
             display: block;
             background: linear-gradient(90deg, #9b59b6, #3498db);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 0.5px;
-            text-shadow: 0 0 5px rgba(155, 89, 182, 0.5); /* إضافة ظل خفيف */
+            text-shadow: 0 0 5px rgba(155, 89, 182, 0.5);
         }
 
-        /* الشبكة */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -113,7 +104,6 @@
             padding: 0 10px;
         }
 
-        /* الكروت */
         .card {
             background: linear-gradient(135deg, #1f1c2c, #2c3e50);
             border-radius: 18px;
@@ -156,7 +146,6 @@
             color: #ecf0f1;
         }
 
-        /* تأثير الحدود عند التحويم */
         .card::before {
             content: '';
             position: absolute;
@@ -181,7 +170,7 @@
             100% { background-position: 400% 0; }
         }
         
-        /* NEW: تنسيقات شاشة تسجيل الدخول */
+        /* NEW: Login Screen Styles */
         #login-screen {
             position: fixed;
             top: 0;
@@ -257,44 +246,42 @@
             <p id="login-message" class="login-message"></p>
         </div>
     </div>
-
-    <div id="main-content">
+    <div id="main-content" class="hidden">
         <header>
             <h1>ICT (احمد عطيه محمد)</h1>
-            <span class="version">V3.3</span> </header>
+            <span class="version">V3.3</span> 
+        </header>
 
         <main class="grid-container">
-
             <a href="AI/index.html" class="card">
                 <h2>الدرس الأول</h2>
                 <p>انقر هنا لبدء اختبار الذكاء الاصطناعي</p>
             </a>
-
             <a href="CCNA IV/index.html" class="card">
                 <h2>الدرس الثاني</h2>
                 <p>انقر هنا لبدء اختبار CCNA IV</p>
             </a>
-
             <a href="Cybersecurity/index.html" class="card">
                 <h2>الدرس الثالث</h2>
                 <p>انقر هنا لبدء اختبار الأمن السيبراني</p>
             </a>
-
             <a href="Encryption Algorithm/index.html" class="card">
                 <h2>الدرس الرابع</h2>
                 <p>انقر هنا لبدء اختبار خوارزميات التشفير</p>
             </a>
-
             <a href="IoT/index.html" class="card">
                 <h2>الدرس الخامس</h2>
                 <p>انقر هنا لبدء اختبار إنترنت الأشياء</p>
             </a>
-
             <a href="Server Administration/index.html" class="card">
                 <h2>الدرس السادس</h2>
                 <p>انقر هنا لبدء اختبار إدارة السيرفرات</p>
             </a>
         </main>
     </div>
+    <script src="data.js"></script>
+    
+    <script src="app.js"></script>
+
 </body>
 </html>
